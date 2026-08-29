@@ -16,10 +16,6 @@ CONFIG_BRCMFMAC_SDIO=y
 CONFIG_BRCMFMAC_USB=y
 CONFIG_BTRFS_PROGS_ZSTD=y
 CONFIG_CGROUPFS_MOUNT_KERNEL_CGROUPS=y
-CONFIG_DOCKER_CGROUP_OPTIONS=y
-CONFIG_DOCKER_NET_MACVLAN=y
-CONFIG_DOCKER_OPTIONAL_FEATURES=y
-CONFIG_DOCKER_STO_EXT4=y
 CONFIG_DRIVER_11AC_SUPPORT=y
 CONFIG_KERNEL_ARM_PMU=y
 CONFIG_KERNEL_CFQ_GROUP_IOSCHED=y
@@ -71,8 +67,6 @@ CONFIG_PACKAGE_bzip2=y
 CONFIG_PACKAGE_cgroupfs-mount=y
 CONFIG_PACKAGE_chattr=y
 CONFIG_PACKAGE_containerd=y
-CONFIG_PACKAGE_docker=y
-CONFIG_PACKAGE_dockerd=y
 CONFIG_PACKAGE_dosfstools=y
 CONFIG_PACKAGE_f2fs-tools=y
 CONFIG_PACKAGE_f2fsck=y
@@ -183,21 +177,16 @@ CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-amlogic=y
 # CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
-CONFIG_PACKAGE_luci-app-docker=y
-CONFIG_PACKAGE_luci-app-dockerman=y
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-webui is not set
-# CONFIG_PACKAGE_luci-app-turboacc is not set
-# CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA is not set
+CONFIG_PACKAGE_luci-app-turboacc=y
+CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_BBR_CCA=y
 # CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_OFFLOADING is not set
 # CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_PDNSD is not set
 # CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_Go is not set
-# CONFIG_PACKAGE_luci-app-upnp is not set
+CONFIG_PACKAGE_luci-app-upnp=y
 # CONFIG_PACKAGE_luci-app-vsftpd is not set
 CONFIG_PACKAGE_luci-i18n-amlogic-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-docker-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-dockerman-zh-cn=y
-CONFIG_PACKAGE_luci-lib-docker=y
 CONFIG_PACKAGE_luci-proto-ipv6=y
 CONFIG_PACKAGE_luci-theme-opentomcat=y
 # CONFIG_PACKAGE_miniupnpd is not set
@@ -280,4 +269,28 @@ CONFIG_PACKAGE_kmod-tcp-bbr=y
 # CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_SHORTCUT_FE_CM is not set
 CONFIG_PACKAGE_vsftpd-alt=y
 CONFIG_VSFTPD_USE_UCI_SCRIPTS=y
+
+# Enable luci-app-daede with the daed backend
+CONFIG_PACKAGE_luci-app-daede=y
+CONFIG_PACKAGE_luci-app-daede_daed=y
+# CONFIG_PACKAGE_luci-app-daede_dae is not set
+CONFIG_PACKAGE_daed=y
+# CONFIG_PACKAGE_dae is not set
+CONFIG_DAED_USE_KERNEL_BTF=y
+# CONFIG_DAED_USE_VMLINUX_BTF is not set
+# CONFIG_PACKAGE_vmlinux-btf is not set
+
+# eBPF / BTF kernel options required by DAE
+CONFIG_KERNEL_BPF_EVENTS=y
+CONFIG_BPF_TOOLCHAIN_HOST=y
+# CONFIG_BPF_TOOLCHAIN_NONE is not set
+CONFIG_KERNEL_XDP_SOCKETS=y
+CONFIG_PACKAGE_kmod-sched-core=y
+CONFIG_PACKAGE_kmod-sched-bpf=y
+CONFIG_PACKAGE_kmod-veth=y
+CONFIG_PACKAGE_kmod-xdp-sockets-diag=y
+
+CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
+CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
+CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
 EOF
