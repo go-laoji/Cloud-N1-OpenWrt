@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/cloud-n1-openwrt.yaml'
       - 'README.md'
       - 'script.sh'
       - 'config.sh'
