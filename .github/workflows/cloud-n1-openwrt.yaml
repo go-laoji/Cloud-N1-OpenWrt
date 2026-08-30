@@ -12,6 +12,9 @@ on:
   schedule:
     - cron: 0 8 * * 0
 
+permissions:
+  contents: write
+
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
@@ -222,7 +225,7 @@ jobs:
         allowUpdates: true
         tag: ${{ env.tag_name }}
         commit: main
-        token: ${{ secrets.actions_release }}
+        token: ${{ github.token }}
         body: |
           编译使用版本:
           ${{ env.useVersionInfo }}
@@ -239,4 +242,4 @@ jobs:
         keep_latest: 3
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.actions_release }}
+        GITHUB_TOKEN: ${{ github.token }}
