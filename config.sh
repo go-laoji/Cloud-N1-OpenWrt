@@ -15,7 +15,7 @@ CONFIG_BRCMFMAC_PCIE=y
 CONFIG_BRCMFMAC_SDIO=y
 CONFIG_BRCMFMAC_USB=y
 CONFIG_BTRFS_PROGS_ZSTD=y
-CONFIG_CGROUPFS_MOUNT_KERNEL_CGROUPS=y
+# CONFIG_CGROUPFS_MOUNT_KERNEL_CGROUPS is not set
 CONFIG_DRIVER_11AC_SUPPORT=y
 CONFIG_KERNEL_ARM_PMU=y
 CONFIG_KERNEL_CFQ_GROUP_IOSCHED=y
@@ -64,9 +64,9 @@ CONFIG_PACKAGE_brcmfmac-firmware-usb=y
 CONFIG_PACKAGE_bsdtar=y
 CONFIG_PACKAGE_btrfs-progs=y
 CONFIG_PACKAGE_bzip2=y
-CONFIG_PACKAGE_cgroupfs-mount=y
+# CONFIG_PACKAGE_cgroupfs-mount is not set
 CONFIG_PACKAGE_chattr=y
-CONFIG_PACKAGE_containerd=y
+# CONFIG_PACKAGE_containerd is not set
 CONFIG_PACKAGE_dosfstools=y
 CONFIG_PACKAGE_f2fs-tools=y
 CONFIG_PACKAGE_f2fsck=y
@@ -232,10 +232,10 @@ CONFIG_PACKAGE_perlbase-utf8=y
 CONFIG_PACKAGE_perlbase-xsloader=y
 CONFIG_PACKAGE_pigz=y
 CONFIG_PACKAGE_pv=y
-CONFIG_PACKAGE_runc=y
+# CONFIG_PACKAGE_runc is not set
 CONFIG_PACKAGE_tar=y
 CONFIG_PACKAGE_terminfo=y
-CONFIG_PACKAGE_tini=y
+# CONFIG_PACKAGE_tini is not set
 CONFIG_PACKAGE_ttyd=y
 CONFIG_PACKAGE_uuidgen=y
 CONFIG_PACKAGE_wireguard-tools=y
@@ -291,6 +291,15 @@ CONFIG_PACKAGE_kmod-sched-core=y
 CONFIG_PACKAGE_kmod-sched-bpf=y
 CONFIG_PACKAGE_kmod-veth=y
 CONFIG_PACKAGE_kmod-xdp-sockets-diag=y
+
+# Docker and its management applications are intentionally excluded
+# CONFIG_PACKAGE_docker is not set
+# CONFIG_PACKAGE_docker-lan-bridge is not set
+# CONFIG_PACKAGE_dockerd is not set
+# CONFIG_PACKAGE_dockermanager is not set
+# CONFIG_PACKAGE_luci-app-dockerman is not set
+# CONFIG_PACKAGE_luci-app-dockermanager is not set
+# CONFIG_PACKAGE_luci-lib-docker is not set
 
 CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y

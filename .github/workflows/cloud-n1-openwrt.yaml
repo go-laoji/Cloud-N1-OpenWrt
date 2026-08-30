@@ -118,6 +118,25 @@ jobs:
           fi
         done
         grep -qx 'CONFIG_BPF_TOOLCHAIN_HOST_PATH="/usr"' .config
+        excluded_packages=(
+          cgroupfs-mount
+          containerd
+          docker
+          docker-lan-bridge
+          dockerd
+          dockermanager
+          luci-app-dockerman
+          luci-app-dockermanager
+          luci-lib-docker
+          runc
+          tini
+        )
+        for package in "${excluded_packages[@]}"; do
+          if grep -qx "CONFIG_PACKAGE_${package}=y" .config; then
+            echo "Excluded Docker package was selected: ${package}"
+            exit 1
+          fi
+        done
         grep -E '^CONFIG_(TARGET_armsr|DEVEL|BPF_TOOLCHAIN|USE_LLVM|HAS_BPF_TOOLCHAIN)' .config
         make download -j8
         find dl -size -1024c -exec rm -f {} \;

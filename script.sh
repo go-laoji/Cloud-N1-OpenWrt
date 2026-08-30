@@ -24,6 +24,18 @@ sed -i '1i src-git smpackage https://github.com/kenzok8/small-package' feeds.con
 rm -rf feeds/luci/applications/{luci-app-dae,luci-app-daed,luci-app-mosdns}
 rm -rf feeds/packages/net/{alist,adguardhome,dae,daed,mosdns,xray*,v2ray*,sing*,smartdns} feeds/packages/utils/v2dat feeds/packages/lang/golang
 rm -rf feeds/smpackage/{base-files,ddns-go,dnsmasq,firewall*,fullconenat,libnftnl,luci-app-ddns-go,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+docker_packages=(
+  feeds/smpackage/cgroupfs-mount
+  feeds/smpackage/docker
+  feeds/smpackage/docker-lan-bridge
+  feeds/smpackage/dockerd
+  feeds/smpackage/dockermanager
+  feeds/smpackage/luci-app-dockerman
+  feeds/smpackage/luci-app-dockermanager
+  feeds/smpackage/other/luci-app-dockerman
+  feeds/smpackage/other/luci-lib-docker
+)
+rm -rf "${docker_packages[@]}"
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
 git clone --depth=1 --filter=blob:none --sparse https://github.com/kenzok8/openwrt-daede package/community/openwrt-daede
 git -C package/community/openwrt-daede sparse-checkout set daed luci-app-daede vmlinux-btf

@@ -10,8 +10,8 @@
   - [x] 修改架构适配斐讯 N1 盒子
     - [x] Target System —— QEMU ARM Virtual Machine
     - [x] Subtarget —— 64-bit ARM machines
-  - [x] `luci-app-docker`
-  - [x] `luci-app-dockerman`
+  - [ ] `docker` / `dockerd`（不参与编译）
+  - [ ] `luci-app-dockerman`（不参与编译）
   - [x] `luci-theme-opentomcat`
   - [x] `luci-app-adguardhome`
   - [x] `luci-app-amlogic`
