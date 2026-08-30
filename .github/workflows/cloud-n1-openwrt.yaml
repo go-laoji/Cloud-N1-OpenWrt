@@ -101,6 +101,23 @@ jobs:
       run: |
         cd openwrt
         make defconfig
+        required_configs=(
+          CONFIG_TARGET_armsr
+          CONFIG_TARGET_armsr_armv8
+          CONFIG_TARGET_armsr_armv8_DEVICE_generic
+          CONFIG_DEVEL
+          CONFIG_BPF_TOOLCHAIN_HOST
+          CONFIG_USE_LLVM_HOST
+          CONFIG_HAS_BPF_TOOLCHAIN
+        )
+        for config in "${required_configs[@]}"; do
+          if ! grep -qx "${config}=y" .config; then
+            echo "Required build option was not resolved: ${config}=y"
+            exit 1
+          fi
+        done
+        grep -qx 'CONFIG_BPF_TOOLCHAIN_HOST_PATH="/usr"' .config
+        grep -E '^CONFIG_(TARGET_armsr|DEVEL|BPF_TOOLCHAIN|USE_LLVM|HAS_BPF_TOOLCHAIN)' .config
         make download -j8
         find dl -size -1024c -exec rm -f {} \;
 
