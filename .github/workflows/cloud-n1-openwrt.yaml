@@ -115,9 +115,11 @@ jobs:
           CONFIG_PACKAGE_ddns-go
           CONFIG_PACKAGE_luci-app-argon-config
           CONFIG_PACKAGE_luci-app-ddns-go
+          CONFIG_PACKAGE_luci-app-redsocks
           CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn
           CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
+          CONFIG_PACKAGE_redsocks
         )
         for config in "${required_configs[@]}"; do
           if ! grep -qx "${config}=y" .config; then

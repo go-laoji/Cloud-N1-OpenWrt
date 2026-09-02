@@ -120,6 +120,18 @@ git clone --depth=1 --filter=blob:none --sparse https://github.com/kenzok8/openw
 git -C package/community/openwrt-daede sparse-checkout set daed luci-app-daede vmlinux-btf
 test -f package/community/openwrt-daede/daed/Makefile
 test -f package/community/openwrt-daede/luci-app-daede/Makefile
+
+# Redsocks is provided by the packages feed; add its LuCI editor separately.
+test -f feeds/packages/net/redsocks/Makefile || {
+  echo "Unable to find redsocks in the packages feed"
+  exit 1
+}
+git clone --depth=1 --filter=blob:none --sparse https://github.com/kenzok8/jell package/community/jell-redsocks
+git -C package/community/jell-redsocks sparse-checkout set luci-app-redsocks
+test -f package/community/jell-redsocks/luci-app-redsocks/Makefile || {
+  echo "Unable to find luci-app-redsocks in the jell source"
+  exit 1
+}
 ./scripts/feeds update -i packages luci smpackage
 for package in \
   luci-app-vsftpd \

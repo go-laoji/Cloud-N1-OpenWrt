@@ -15,6 +15,7 @@
   - [x] `luci-theme-argon`（默认主题）
   - [x] `luci-app-argon-config`
   - [x] `ddns-go` / `luci-app-ddns-go`
+  - [x] `redsocks` / `luci-app-redsocks`
   - [ ] `luci-app-adguardhome`（不参与编译）
   - [ ] `luci-app-amlogic`（不参与编译）
 
@@ -49,6 +50,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260902 增加 Redsocks 及 LuCI 配置页面
 - 20260902 增加 DDNS-GO 及 LuCI 管理页面
 - 20260902 默认主题更换为 Argon，增加 Argon 配置，移除 Amlogic 和 AdGuard Home
 - 20260829 删除一些其它的软件，增加daed

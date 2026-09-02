@@ -181,6 +181,7 @@ CONFIG_PACKAGE_luci-app-argon-config=y
 # CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 CONFIG_PACKAGE_luci-app-ddns-go=y
+CONFIG_PACKAGE_luci-app-redsocks=y
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-webui is not set
 CONFIG_PACKAGE_luci-app-turboacc=y
@@ -237,6 +238,7 @@ CONFIG_PACKAGE_perlbase-utf8=y
 CONFIG_PACKAGE_perlbase-xsloader=y
 CONFIG_PACKAGE_pigz=y
 CONFIG_PACKAGE_pv=y
+CONFIG_PACKAGE_redsocks=y
 # CONFIG_PACKAGE_runc is not set
 CONFIG_PACKAGE_tar=y
 CONFIG_PACKAGE_terminfo=y
