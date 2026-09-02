@@ -39,12 +39,8 @@ test -f "$hostapd_makefile" || {
   echo "Unable to find $hostapd_makefile"
   exit 1
 }
-for rule in "${hostapd_duplicate_rules[@]}"; do
-  grep -Fq "$rule" "$hostapd_makefile" || {
-    echo "Unable to find hostapd-common install rule: $rule"
-    exit 1
-  }
-done
+# Newer lede revisions already remove these rules. Keep this compatible with
+# both older revisions that still need patching and newer fixed revisions.
 sed -i \
   -e '/files\/hostapd\.sh.*lib\/netifd\/hostapd\.sh/d' \
   -e '/files\/wps-hotplug\.sh.*rc\.button\/wps/d' \
