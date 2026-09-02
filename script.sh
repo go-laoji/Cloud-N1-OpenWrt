@@ -29,6 +29,34 @@ test -f "$wifi_scripts_wifi" || {
 rm -f "$base_files_wifi" || exit 1
 echo "Using /sbin/wifi from wifi-scripts"
 
+# wifi-scripts also owns the WPS button and hostapd integration scripts.
+hostapd_makefile="package/network/services/hostapd/Makefile"
+hostapd_duplicate_rules=(
+  './files/hostapd.sh $(1)/lib/netifd/hostapd.sh'
+  './files/wps-hotplug.sh $(1)/etc/rc.button/wps'
+)
+test -f "$hostapd_makefile" || {
+  echo "Unable to find $hostapd_makefile"
+  exit 1
+}
+for rule in "${hostapd_duplicate_rules[@]}"; do
+  grep -Fq "$rule" "$hostapd_makefile" || {
+    echo "Unable to find hostapd-common install rule: $rule"
+    exit 1
+  }
+done
+sed -i \
+  -e '/files\/hostapd\.sh.*lib\/netifd\/hostapd\.sh/d' \
+  -e '/files\/wps-hotplug\.sh.*rc\.button\/wps/d' \
+  "$hostapd_makefile" || exit 1
+for rule in "${hostapd_duplicate_rules[@]}"; do
+  if grep -Fq "$rule" "$hostapd_makefile"; then
+    echo "Failed to remove hostapd-common install rule: $rule"
+    exit 1
+  fi
+done
+echo "Using WPS and hostapd integration scripts from wifi-scripts"
+
 # Add luci-app-adguardhome
 git clone https://github.com/rufengsuixing/luci-app-adguardhome.git package-temp/luci-app-adguardhome
 mv -f package-temp/luci-app-adguardhome package/lean/
