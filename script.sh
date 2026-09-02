@@ -19,6 +19,16 @@ grep -qxF 'PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04d
 rm -rf "$netifd_patches_dir" || exit 1
 echo "Pinned netifd to 2021-06-04 (50381d0a2998f6c0fc4823f0c2aa4206063d549e)"
 
+# wifi-scripts owns /sbin/wifi; remove the stale duplicate from base-files.
+base_files_wifi="package/base-files/files/sbin/wifi"
+wifi_scripts_wifi="package/network/config/wifi-scripts/files/sbin/wifi"
+test -f "$wifi_scripts_wifi" || {
+  echo "Unable to find replacement $wifi_scripts_wifi"
+  exit 1
+}
+rm -f "$base_files_wifi" || exit 1
+echo "Using /sbin/wifi from wifi-scripts"
+
 # Add luci-app-adguardhome
 git clone https://github.com/rufengsuixing/luci-app-adguardhome.git package-temp/luci-app-adguardhome
 mv -f package-temp/luci-app-adguardhome package/lean/
