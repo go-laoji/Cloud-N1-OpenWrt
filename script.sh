@@ -1,6 +1,22 @@
 #!/bin/bash
 cd openwrt
 
+# Pin netifd to the last version compatible with the armsr 6.6 headers.
+netifd_makefile="package/network/config/netifd/Makefile"
+test -f "$netifd_makefile" || {
+  echo "Unable to find $netifd_makefile"
+  exit 1
+}
+sed -i \
+  -e 's/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2021-06-04/' \
+  -e 's/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=50381d0a2998f6c0fc4823f0c2aa4206063d549e/' \
+  -e 's/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04dd1f80f558889/' \
+  "$netifd_makefile" || exit 1
+grep -qxF 'PKG_SOURCE_DATE:=2021-06-04' "$netifd_makefile" || exit 1
+grep -qxF 'PKG_SOURCE_VERSION:=50381d0a2998f6c0fc4823f0c2aa4206063d549e' "$netifd_makefile" || exit 1
+grep -qxF 'PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04dd1f80f558889' "$netifd_makefile" || exit 1
+echo "Pinned netifd to 2021-06-04 (50381d0a2998f6c0fc4823f0c2aa4206063d549e)"
+
 # Add luci-app-adguardhome
 git clone https://github.com/rufengsuixing/luci-app-adguardhome.git package-temp/luci-app-adguardhome
 mv -f package-temp/luci-app-adguardhome package/lean/
