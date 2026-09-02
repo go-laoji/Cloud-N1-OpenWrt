@@ -3,6 +3,7 @@ cd openwrt
 
 # Pin netifd to the last version compatible with the armsr 6.6 headers.
 netifd_makefile="package/network/config/netifd/Makefile"
+netifd_patches_dir="package/network/config/netifd/patches"
 test -f "$netifd_makefile" || {
   echo "Unable to find $netifd_makefile"
   exit 1
@@ -15,6 +16,7 @@ sed -i \
 grep -qxF 'PKG_SOURCE_DATE:=2021-06-04' "$netifd_makefile" || exit 1
 grep -qxF 'PKG_SOURCE_VERSION:=50381d0a2998f6c0fc4823f0c2aa4206063d549e' "$netifd_makefile" || exit 1
 grep -qxF 'PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04dd1f80f558889' "$netifd_makefile" || exit 1
+rm -rf "$netifd_patches_dir" || exit 1
 echo "Pinned netifd to 2021-06-04 (50381d0a2998f6c0fc4823f0c2aa4206063d549e)"
 
 # Add luci-app-adguardhome
