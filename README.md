@@ -12,9 +12,11 @@
     - [x] Subtarget —— 64-bit ARM machines
   - [ ] `docker` / `dockerd`（不参与编译）
   - [ ] `luci-app-dockerman`（不参与编译）
-  - [x] `luci-theme-opentomcat`
-  - [x] `luci-app-adguardhome`
-  - [x] `luci-app-amlogic`
+  - [x] `luci-theme-argon`（默认主题）
+  - [x] `luci-app-argon-config`
+  - [x] `ddns-go` / `luci-app-ddns-go`
+  - [ ] `luci-app-adguardhome`（不参与编译）
+  - [ ] `luci-app-amlogic`（不参与编译）
 
 **默认编译**（默认勾选，未取消！）
   - [x] `luci-app-autoreboot`
@@ -47,6 +49,8 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260902 增加 DDNS-GO 及 LuCI 管理页面
+- 20260902 默认主题更换为 Argon，增加 Argon 配置，移除 Amlogic 和 AdGuard Home
 - 20260829 删除一些其它的软件，增加daed
 - 20260515 修改打包脚本，获取实际内核版本，输出到 release 说明
 - 20250424 修正底层编译环境 `Ubuntu 20.04` 弃用造成的编译错误

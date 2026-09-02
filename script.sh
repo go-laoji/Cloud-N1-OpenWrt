@@ -57,29 +57,52 @@ for rule in "${hostapd_duplicate_rules[@]}"; do
 done
 echo "Using WPS and hostapd integration scripts from wifi-scripts"
 
-# Add luci-app-adguardhome
-git clone https://github.com/rufengsuixing/luci-app-adguardhome.git package-temp/luci-app-adguardhome
-mv -f package-temp/luci-app-adguardhome package/lean/
-rm -rf package-temp
-
-# Add luci-theme-opentomcat
-git clone https://github.com/Leo-Jo-My/luci-theme-opentomcat.git theme-temp/luci-theme-opentomcat
-rm -rf theme-temp/luci-theme-opentomcat/LICENSE
-rm -rf theme-temp/luci-theme-opentomcat/README.md
-mv -f theme-temp/luci-theme-opentomcat package/lean/
-rm -rf theme-temp
-default_theme='opentomcat'
-sed -i "s/bootstrap/$default_theme/g" feeds/luci/modules/luci-base/root/etc/config/luci
-
-# Add luci-app-amlogic
-git clone https://github.com/ophub/luci-app-amlogic.git  package-temp/luci-app-amlogic
-mv -f package-temp/luci-app-amlogic/luci-app-amlogic package/lean/
-rm -rf package-temp
 sed -i '1i src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 ./scripts/feeds update -a
 rm -rf feeds/luci/applications/{luci-app-dae,luci-app-daed,luci-app-mosdns}
 rm -rf feeds/packages/net/{alist,adguardhome,dae,daed,mosdns,xray*,v2ray*,sing*,smartdns} feeds/packages/utils/v2dat feeds/packages/lang/golang
-rm -rf feeds/smpackage/{base-files,ddns-go,dnsmasq,firewall*,fullconenat,libnftnl,luci-app-ddns-go,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+excluded_smpackage_packages=(
+  feeds/smpackage/adguardhome
+  feeds/smpackage/base-files
+  feeds/smpackage/dnsmasq
+  feeds/smpackage/firewall*
+  feeds/smpackage/fullconenat
+  feeds/smpackage/libnftnl
+  feeds/smpackage/luci-app-adguardhome
+  feeds/smpackage/luci-app-amlogic
+  feeds/smpackage/luci-app-argon-config
+  feeds/smpackage/luci-theme-argon
+  feeds/smpackage/miniupnpd-iptables
+  feeds/smpackage/nftables
+  feeds/smpackage/opkg
+  feeds/smpackage/ppp
+  feeds/smpackage/ucl
+  feeds/smpackage/upx
+  feeds/smpackage/vsftpd*
+  feeds/smpackage/wireless-regdb
+)
+rm -rf "${excluded_smpackage_packages[@]}"
+
+# Use the Argon packages maintained by the matching LuCI feed.
+argon_packages=(
+  feeds/luci/applications/luci-app-argon-config/Makefile
+  feeds/luci/themes/luci-theme-argon/Makefile
+)
+for package_makefile in "${argon_packages[@]}"; do
+  test -f "$package_makefile" || {
+    echo "Unable to find $package_makefile"
+    exit 1
+  }
+done
+luci_config="feeds/luci/modules/luci-base/root/etc/config/luci"
+grep -qF 'option mediaurlbase /luci-static/bootstrap' "$luci_config" || {
+  echo "Unable to find the default bootstrap theme in $luci_config"
+  exit 1
+}
+sed -i 's#/luci-static/bootstrap#/luci-static/argon#' "$luci_config" || exit 1
+grep -qF 'option mediaurlbase /luci-static/argon' "$luci_config" || exit 1
+echo "Using Argon as the default LuCI theme"
+
 docker_packages=(
   feeds/smpackage/cgroupfs-mount
   feeds/smpackage/docker

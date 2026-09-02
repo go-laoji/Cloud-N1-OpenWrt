@@ -88,7 +88,6 @@ jobs:
         cd openwrt
         cat feeds/packages/utils/xfsprogs/Makefile
         sed -i 's/TARGET_CFLAGS += -DHAVE_MAP_SYNC/TARGET_CFLAGS += -DHAVE_MAP_SYNC -D_LARGEFILE64_SOURCE/' feeds/packages/utils/xfsprogs/Makefile
-        ./scripts/feeds update -a
 
 
     - name: Install feeds
@@ -113,6 +112,12 @@ jobs:
           CONFIG_BPF_TOOLCHAIN_HOST
           CONFIG_USE_LLVM_HOST
           CONFIG_HAS_BPF_TOOLCHAIN
+          CONFIG_PACKAGE_ddns-go
+          CONFIG_PACKAGE_luci-app-argon-config
+          CONFIG_PACKAGE_luci-app-ddns-go
+          CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn
+          CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn
+          CONFIG_PACKAGE_luci-theme-argon
         )
         for config in "${required_configs[@]}"; do
           if ! grep -qx "${config}=y" .config; then
@@ -122,21 +127,25 @@ jobs:
         done
         grep -qx 'CONFIG_BPF_TOOLCHAIN_HOST_PATH="/usr"' .config
         excluded_packages=(
+          adguardhome
           cgroupfs-mount
           containerd
           docker
           docker-lan-bridge
           dockerd
           dockermanager
+          luci-app-adguardhome
+          luci-app-amlogic
           luci-app-dockerman
           luci-app-dockermanager
           luci-lib-docker
+          luci-theme-opentomcat
           runc
           tini
         )
         for package in "${excluded_packages[@]}"; do
           if grep -qx "CONFIG_PACKAGE_${package}=y" .config; then
-            echo "Excluded Docker package was selected: ${package}"
+            echo "Excluded package was selected: ${package}"
             exit 1
           fi
         done
