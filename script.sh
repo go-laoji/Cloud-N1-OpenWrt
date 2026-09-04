@@ -37,39 +37,26 @@ fi
 grep -Fq "$new_default_lan_rule" "$config_generate" || exit 1
 echo "Using ${default_lan_ip} as the default LAN IP"
 
-# wifi-scripts owns /sbin/wifi; remove the stale duplicate from base-files.
-base_files_wifi="package/base-files/files/sbin/wifi"
-wifi_scripts_wifi="package/network/config/wifi-scripts/files/sbin/wifi"
-test -f "$wifi_scripts_wifi" || {
-  echo "Unable to find replacement $wifi_scripts_wifi"
+# lede reverted the standalone wifi-scripts package and restored the legacy
+# files to base-files and hostapd-common. Remove its stale mac80211 dependency
+# only while the standalone package is absent.
+wifi_scripts_dir="package/network/config/wifi-scripts"
+mac80211_makefile="package/kernel/mac80211/Makefile"
+wifi_scripts_dependency='(^|[[:space:]])\+wifi-scripts([[:space:]]|$)'
+test -f "$mac80211_makefile" || {
+  echo "Unable to find $mac80211_makefile"
   exit 1
 }
-rm -f "$base_files_wifi" || exit 1
-echo "Using /sbin/wifi from wifi-scripts"
-
-# wifi-scripts also owns the WPS button and hostapd integration scripts.
-hostapd_makefile="package/network/services/hostapd/Makefile"
-hostapd_duplicate_rules=(
-  './files/hostapd.sh $(1)/lib/netifd/hostapd.sh'
-  './files/wps-hotplug.sh $(1)/etc/rc.button/wps'
-)
-test -f "$hostapd_makefile" || {
-  echo "Unable to find $hostapd_makefile"
-  exit 1
-}
-# Newer lede revisions already remove these rules. Keep this compatible with
-# both older revisions that still need patching and newer fixed revisions.
-sed -i \
-  -e '/files\/hostapd\.sh.*lib\/netifd\/hostapd\.sh/d' \
-  -e '/files\/wps-hotplug\.sh.*rc\.button\/wps/d' \
-  "$hostapd_makefile" || exit 1
-for rule in "${hostapd_duplicate_rules[@]}"; do
-  if grep -Fq "$rule" "$hostapd_makefile"; then
-    echo "Failed to remove hostapd-common install rule: $rule"
+if [ ! -d "$wifi_scripts_dir" ]; then
+  if grep -Eq "$wifi_scripts_dependency" "$mac80211_makefile"; then
+    sed -i -E 's/[[:space:]]+\+wifi-scripts([[:space:]]|$)/\1/g' "$mac80211_makefile" || exit 1
+  fi
+  if grep -Eq "$wifi_scripts_dependency" "$mac80211_makefile"; then
+    echo "Failed to remove the stale wifi-scripts dependency from $mac80211_makefile"
     exit 1
   fi
-done
-echo "Using WPS and hostapd integration scripts from wifi-scripts"
+  echo "Using legacy Wi-Fi files from base-files and hostapd-common"
+fi
 
 sed -i '1i src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 ./scripts/feeds update -a
