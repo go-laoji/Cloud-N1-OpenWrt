@@ -25,6 +25,7 @@ env:
   KERNEL_VERSION: latest
   KERNEL_REPO_URL: breakingbadboy/OpenWrt
   KERNEL_TAG: stable
+  DEFAULT_LAN_IP: 192.168.11.240
 
 jobs:
   build_openwrt:
@@ -210,7 +211,7 @@ jobs:
         KERNEL_REPO_URL: ${{ env.KERNEL_REPO_URL }}
         KERNEL_VERSION_NAME: ${{ steps.resolve_kernel.outputs.kernel_version }}
         KERNEL_AUTO_LATEST: false
-        WHOAMI: huangqian8
+        WHOAMI: go-laoji
 
     - name: Organize files
       id: organize
@@ -245,7 +246,7 @@ jobs:
           刷机固件简介：
             打包日期：${{ env.PACKAGED_OUTPUTDATE }}
             内核版本：${{ env.KERNEL_VERSION }}
-            默认IP：192.168.1.1 默认用户名密码： root/password
+            默认IP：${{ env.DEFAULT_LAN_IP }} 默认用户名密码： root/password
         artifacts: "${{ env.FIRMWARE }}/*.*,${{ env.PACKAGED_OUTPUTPATH }}/*.*"
 
     - name: Remove old Releases

@@ -19,6 +19,24 @@ grep -qxF 'PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04d
 rm -rf "$netifd_patches_dir" || exit 1
 echo "Pinned netifd to 2021-06-04 (50381d0a2998f6c0fc4823f0c2aa4206063d549e)"
 
+# Set the LAN address generated on the first boot.
+config_generate="package/base-files/files/bin/config_generate"
+default_lan_ip="${DEFAULT_LAN_IP:-192.168.11.240}"
+old_default_lan_rule='lan) ipad=${ipaddr:-"192.168.1.1"} ;;'
+new_default_lan_rule="lan) ipad=\${ipaddr:-\"${default_lan_ip}\"} ;;"
+test -f "$config_generate" || {
+  echo "Unable to find $config_generate"
+  exit 1
+}
+if grep -Fq "$old_default_lan_rule" "$config_generate"; then
+  sed -i "s/192\\.168\\.1\\.1/${default_lan_ip}/" "$config_generate" || exit 1
+elif ! grep -Fq "$new_default_lan_rule" "$config_generate"; then
+  echo "Unable to find the default LAN IP rule in $config_generate"
+  exit 1
+fi
+grep -Fq "$new_default_lan_rule" "$config_generate" || exit 1
+echo "Using ${default_lan_ip} as the default LAN IP"
+
 # wifi-scripts owns /sbin/wifi; remove the stale duplicate from base-files.
 base_files_wifi="package/base-files/files/sbin/wifi"
 wifi_scripts_wifi="package/network/config/wifi-scripts/files/sbin/wifi"

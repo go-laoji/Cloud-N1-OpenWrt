@@ -10,6 +10,7 @@
   - [x] 修改架构适配斐讯 N1 盒子
     - [x] Target System —— QEMU ARM Virtual Machine
     - [x] Subtarget —— 64-bit ARM machines
+  - [x] 默认 LAN IP：`192.168.11.240`
   - [ ] `docker` / `dockerd`（不参与编译）
   - [ ] `luci-app-dockerman`（不参与编译）
   - [x] `luci-theme-argon`（默认主题）
@@ -51,6 +52,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260904 默认 LAN IP 修改为 192.168.11.240
 - 20260904 增加 iStore 应用商店
 - 20260904 移除存在 LuCI 兼容问题的 DDNS-GO
 - 20260902 增加 Redsocks 及 LuCI 配置页面
