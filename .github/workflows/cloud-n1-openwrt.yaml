@@ -26,6 +26,8 @@ env:
   KERNEL_REPO_URL: breakingbadboy/OpenWrt
   KERNEL_TAG: stable
   DEFAULT_LAN_IP: 192.168.11.240
+  FIRMWARE_DIST: Go-Laoji N1
+  LUCI_DISPLAY: LuCI openwrt-25.12
 
 jobs:
   build_openwrt:
@@ -80,6 +82,7 @@ jobs:
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
+        echo "FIRMWARE_VERSION=R$(date +%y.%m.%d)" >> $GITHUB_ENV
 
     - name: Update feeds
       run: |
@@ -248,6 +251,7 @@ jobs:
 
           刷机固件简介：
             打包日期：${{ env.PACKAGED_OUTPUTDATE }}
+            固件版本：${{ env.FIRMWARE_DIST }} ${{ env.FIRMWARE_VERSION }}
             内核版本：${{ env.KERNEL_VERSION }}
             默认IP：${{ env.DEFAULT_LAN_IP }} 默认用户名密码： root/password
         artifacts: "${{ env.FIRMWARE }}/*.*,${{ env.PACKAGED_OUTPUTPATH }}/*.*"

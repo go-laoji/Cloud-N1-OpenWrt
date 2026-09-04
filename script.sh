@@ -19,6 +19,40 @@ grep -qxF 'PKG_MIRROR_HASH:=2718df3d3538c93ac77accf55716fb341741df3d231aac59e04d
 rm -rf "$netifd_patches_dir" || exit 1
 echo "Pinned netifd to 2021-06-04 (50381d0a2998f6c0fc4823f0c2aa4206063d549e)"
 
+# Customize the firmware identity shown by LuCI and system release files.
+firmware_dist="${FIRMWARE_DIST:-Go-Laoji N1}"
+firmware_version="${FIRMWARE_VERSION:-R$(date +%y.%m.%d)}"
+openwrt_release="package/base-files/files/etc/openwrt_release"
+os_release="package/base-files/files/usr/lib/os-release"
+default_settings="package/lean/default-settings/files/zzz-default-settings"
+for release_file in "$openwrt_release" "$os_release" "$default_settings"; do
+  test -f "$release_file" || {
+    echo "Unable to find $release_file"
+    exit 1
+  }
+done
+sed -i \
+  -e "s#^DISTRIB_REVISION=.*#DISTRIB_REVISION='${firmware_version}'#" \
+  -e "s#^DISTRIB_DESCRIPTION=.*#DISTRIB_DESCRIPTION='${firmware_dist} '#" \
+  "$openwrt_release" || exit 1
+sed -i \
+  -e "s#^NAME=.*#NAME=\"${firmware_dist}\"#" \
+  -e "s#^VERSION=.*#VERSION=\"${firmware_version}\"#" \
+  -e "s#^PRETTY_NAME=.*#PRETTY_NAME=\"${firmware_dist} ${firmware_version}\"#" \
+  -e "s#^BUILD_ID=.*#BUILD_ID=\"${firmware_version}\"#" \
+  -e "s#^OPENWRT_RELEASE=.*#OPENWRT_RELEASE=\"${firmware_dist} ${firmware_version}\"#" \
+  "$os_release" || exit 1
+sed -i \
+  -e "s#DISTRIB_REVISION='[^']*'#DISTRIB_REVISION='${firmware_version}'#" \
+  -e "s#DISTRIB_DESCRIPTION='[^']*'#DISTRIB_DESCRIPTION='${firmware_dist} '#" \
+  -e "s#OPENWRT_RELEASE=\"[^\"]*\"#OPENWRT_RELEASE=\"${firmware_dist} ${firmware_version}\"#" \
+  "$default_settings" || exit 1
+grep -qxF "DISTRIB_REVISION='${firmware_version}'" "$openwrt_release" || exit 1
+grep -qxF "DISTRIB_DESCRIPTION='${firmware_dist} '" "$openwrt_release" || exit 1
+grep -qF "DISTRIB_REVISION='${firmware_version}'" "$default_settings" || exit 1
+grep -qF "DISTRIB_DESCRIPTION='${firmware_dist} '" "$default_settings" || exit 1
+echo "Using ${firmware_dist} ${firmware_version} as the firmware version"
+
 # Set the LAN address generated on the first boot.
 config_generate="package/base-files/files/bin/config_generate"
 default_lan_ip="${DEFAULT_LAN_IP:-192.168.11.240}"
@@ -60,6 +94,24 @@ fi
 
 sed -i '1i src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 ./scripts/feeds update -a
+
+# Override the branch label displayed on the LuCI overview page.
+luci_makefile="feeds/luci/luci.mk"
+luci_display="${LUCI_DISPLAY:-LuCI openwrt-25.12}"
+test -f "$luci_makefile" || {
+  echo "Unable to find $luci_makefile"
+  exit 1
+}
+if ! grep -qxF "PKG_GITBRANCH:=${luci_display}" "$luci_makefile"; then
+  grep -qF 'PKG_GITBRANCH?=' "$luci_makefile" || {
+    echo "Unable to find PKG_GITBRANCH in $luci_makefile"
+    exit 1
+  }
+  sed -i "s#^PKG_GITBRANCH?=.*#PKG_GITBRANCH:=${luci_display}#" "$luci_makefile" || exit 1
+fi
+grep -qxF "PKG_GITBRANCH:=${luci_display}" "$luci_makefile" || exit 1
+echo "Using ${luci_display} as the LuCI display version"
+
 rm -rf feeds/luci/applications/{luci-app-dae,luci-app-daed,luci-app-mosdns}
 rm -rf feeds/packages/net/{alist,adguardhome,dae,daed,mosdns,xray*,v2ray*,sing*,smartdns} feeds/packages/utils/v2dat feeds/packages/lang/golang
 excluded_smpackage_packages=(

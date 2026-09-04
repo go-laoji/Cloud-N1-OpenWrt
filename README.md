@@ -10,6 +10,7 @@
   - [x] 修改架构适配斐讯 N1 盒子
     - [x] Target System —— QEMU ARM Virtual Machine
     - [x] Subtarget —— 64-bit ARM machines
+  - [x] 固件版本：`Go-Laoji N1 R26.09.04 / LuCI openwrt-25.12`（日期按构建日生成）
   - [x] 默认 LAN IP：`192.168.11.240`
   - [ ] `docker` / `dockerd`（不参与编译）
   - [ ] `luci-app-dockerman`（不参与编译）
@@ -53,6 +54,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260904 自定义概览页固件版本并按构建日期显示年月日
 - 20260904 增加 FRPC 客户端及 LuCI 配置页面
 - 20260904 默认 LAN IP 修改为 192.168.11.240
 - 20260904 增加 iStore 应用商店
