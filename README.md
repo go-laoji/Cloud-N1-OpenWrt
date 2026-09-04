@@ -16,6 +16,7 @@
   - [x] `luci-app-argon-config`
   - [ ] `ddns-go` / `luci-app-ddns-go`（不参与编译）
   - [x] `redsocks` / `luci-app-redsocks`
+  - [x] `luci-app-store`
   - [ ] `luci-app-adguardhome`（不参与编译）
   - [ ] `luci-app-amlogic`（不参与编译）
 
@@ -50,6 +51,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260904 增加 iStore 应用商店
 - 20260904 移除存在 LuCI 兼容问题的 DDNS-GO
 - 20260902 增加 Redsocks 及 LuCI 配置页面
 - 20260902 增加 DDNS-GO 及 LuCI 管理页面

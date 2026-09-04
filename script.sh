@@ -81,6 +81,19 @@ excluded_smpackage_packages=(
 )
 rm -rf "${excluded_smpackage_packages[@]}"
 
+# luci-app-store and its task service are provided by smpackage.
+istore_packages=(
+  feeds/smpackage/luci-app-store/Makefile
+  feeds/smpackage/luci-lib-taskd/Makefile
+  feeds/smpackage/taskd/Makefile
+)
+for package_makefile in "${istore_packages[@]}"; do
+  test -f "$package_makefile" || {
+    echo "Unable to find iStore package: $package_makefile"
+    exit 1
+  }
+done
+
 # Use the Argon packages maintained by the matching LuCI feed.
 argon_packages=(
   feeds/luci/applications/luci-app-argon-config/Makefile

@@ -182,6 +182,7 @@ CONFIG_PACKAGE_luci-app-argon-config=y
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-ddns-go is not set
 CONFIG_PACKAGE_luci-app-redsocks=y
+CONFIG_PACKAGE_luci-app-store=y
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-webui is not set
 CONFIG_PACKAGE_luci-app-turboacc=y

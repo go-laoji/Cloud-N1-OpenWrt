@@ -114,6 +114,7 @@ jobs:
           CONFIG_HAS_BPF_TOOLCHAIN
           CONFIG_PACKAGE_luci-app-argon-config
           CONFIG_PACKAGE_luci-app-redsocks
+          CONFIG_PACKAGE_luci-app-store
           CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
           CONFIG_PACKAGE_redsocks
