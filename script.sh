@@ -60,6 +60,7 @@ rm -rf feeds/packages/net/{alist,adguardhome,dae,daed,mosdns,xray*,v2ray*,sing*,
 excluded_smpackage_packages=(
   feeds/smpackage/adguardhome
   feeds/smpackage/base-files
+  feeds/smpackage/ddns-go
   feeds/smpackage/dnsmasq
   feeds/smpackage/firewall*
   feeds/smpackage/fullconenat
@@ -67,6 +68,7 @@ excluded_smpackage_packages=(
   feeds/smpackage/luci-app-adguardhome
   feeds/smpackage/luci-app-amlogic
   feeds/smpackage/luci-app-argon-config
+  feeds/smpackage/luci-app-ddns-go
   feeds/smpackage/luci-theme-argon
   feeds/smpackage/miniupnpd-iptables
   feeds/smpackage/nftables
