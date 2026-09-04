@@ -16,6 +16,7 @@
   - [x] `luci-theme-argon`（默认主题）
   - [x] `luci-app-argon-config`
   - [ ] `ddns-go` / `luci-app-ddns-go`（不参与编译）
+  - [x] `frpc` / `luci-app-frpc`
   - [x] `redsocks` / `luci-app-redsocks`
   - [x] `luci-app-store`
   - [ ] `luci-app-adguardhome`（不参与编译）
@@ -52,6 +53,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260904 增加 FRPC 客户端及 LuCI 配置页面
 - 20260904 默认 LAN IP 修改为 192.168.11.240
 - 20260904 增加 iStore 应用商店
 - 20260904 移除存在 LuCI 兼容问题的 DDNS-GO

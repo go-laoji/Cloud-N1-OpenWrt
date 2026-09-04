@@ -73,6 +73,7 @@ CONFIG_PACKAGE_dosfstools=y
 CONFIG_PACKAGE_f2fs-tools=y
 CONFIG_PACKAGE_f2fsck=y
 CONFIG_PACKAGE_fdisk=y
+CONFIG_PACKAGE_frpc=y
 CONFIG_PACKAGE_gawk=y
 CONFIG_PACKAGE_getopt=y
 CONFIG_PACKAGE_hostapd-common=y
@@ -181,6 +182,7 @@ CONFIG_PACKAGE_luci-app-argon-config=y
 # CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-ddns-go is not set
+CONFIG_PACKAGE_luci-app-frpc=y
 CONFIG_PACKAGE_luci-app-redsocks=y
 CONFIG_PACKAGE_luci-app-store=y
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
@@ -311,6 +313,7 @@ CONFIG_PACKAGE_kmod-xdp-sockets-diag=y
 
 CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
 # CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn is not set
+CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
 EOF

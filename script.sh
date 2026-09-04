@@ -68,6 +68,7 @@ excluded_smpackage_packages=(
   feeds/smpackage/ddns-go
   feeds/smpackage/dnsmasq
   feeds/smpackage/firewall*
+  feeds/smpackage/frp
   feeds/smpackage/fullconenat
   feeds/smpackage/libnftnl
   feeds/smpackage/luci-app-adguardhome
@@ -78,6 +79,7 @@ excluded_smpackage_packages=(
   feeds/smpackage/miniupnpd-iptables
   feeds/smpackage/nftables
   feeds/smpackage/opkg
+  feeds/smpackage/other/lean/luci-app-frpc
   feeds/smpackage/ppp
   feeds/smpackage/ucl
   feeds/smpackage/upx
@@ -85,6 +87,18 @@ excluded_smpackage_packages=(
   feeds/smpackage/wireless-regdb
 )
 rm -rf "${excluded_smpackage_packages[@]}"
+
+# Use FRPC and its LuCI application from the matching official feeds.
+frpc_packages=(
+  feeds/packages/net/frp/Makefile
+  feeds/luci/applications/luci-app-frpc/Makefile
+)
+for package_makefile in "${frpc_packages[@]}"; do
+  test -f "$package_makefile" || {
+    echo "Unable to find FRPC package: $package_makefile"
+    exit 1
+  }
+done
 
 # luci-app-store and its task service are provided by smpackage.
 istore_packages=(

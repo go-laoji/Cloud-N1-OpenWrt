@@ -113,10 +113,13 @@ jobs:
           CONFIG_BPF_TOOLCHAIN_HOST
           CONFIG_USE_LLVM_HOST
           CONFIG_HAS_BPF_TOOLCHAIN
+          CONFIG_PACKAGE_frpc
           CONFIG_PACKAGE_luci-app-argon-config
+          CONFIG_PACKAGE_luci-app-frpc
           CONFIG_PACKAGE_luci-app-redsocks
           CONFIG_PACKAGE_luci-app-store
           CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn
+          CONFIG_PACKAGE_luci-i18n-frpc-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
           CONFIG_PACKAGE_redsocks
         )
