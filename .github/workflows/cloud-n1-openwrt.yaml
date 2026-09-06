@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/cloud-n1-openwrt.yaml'
-      - 'README.md'
+      - 'packaging/**'
       - 'script.sh'
       - 'config.sh'
   schedule:
@@ -14,6 +14,10 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: cloud-n1-openwrt-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -67,7 +71,6 @@ jobs:
       run: |
         sudo -E apt-mark hold grub-efi-amd64-signed
         sudo -E apt-get -qq update --fix-missing
-        sudo -E apt-get -qq full-upgrade
         sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool llvm lrzsz mkisofs msmtp ninja-build p7zip p7zip-full pahole patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
         sudo timedatectl set-timezone "$TZ"
         clang --version
@@ -75,23 +78,33 @@ jobs:
         pahole --version
 
     - name: Clone source code
+      id: source
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
+        echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
         useVersionInfo=$(git show -s --date=short --format="date: %cd<br/>commit: %s<br/>commit hash: %H")
         echo "useVersionInfo=$useVersionInfo" >> $GITHUB_ENV
         echo "DATE=$(date "+%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
         echo "tag_name=$(date +%Y%m%d)" >> $GITHUB_ENV
         echo "FIRMWARE_VERSION=R$(date +%y.%m.%d)" >> $GITHUB_ENV
 
+    - name: Restore build cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          openwrt/.ccache
+          openwrt/dl
+        key: n1-openwrt-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-${{ hashFiles('config.sh', 'script.sh') }}
+        restore-keys: |
+          n1-openwrt-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-
+          n1-openwrt-${{ runner.os }}-armsr-
+
     - name: Update feeds
       run: |
         [ -e files ] && mv files openwrt/files
         chmod +x $SCRIPT_SH
         ./$SCRIPT_SH
-        cd openwrt
-        cat feeds/packages/utils/xfsprogs/Makefile
-        sed -i 's/TARGET_CFLAGS += -DHAVE_MAP_SYNC/TARGET_CFLAGS += -DHAVE_MAP_SYNC -D_LARGEFILE64_SOURCE/' feeds/packages/utils/xfsprogs/Makefile
 
 
     - name: Install feeds
@@ -112,12 +125,33 @@ jobs:
           CONFIG_TARGET_armsr
           CONFIG_TARGET_armsr_armv8
           CONFIG_TARGET_armsr_armv8_DEVICE_generic
+          CONFIG_CCACHE
           CONFIG_DEVEL
           CONFIG_BPF_TOOLCHAIN_HOST
           CONFIG_USE_LLVM_HOST
           CONFIG_HAS_BPF_TOOLCHAIN
+          CONFIG_DAED_USE_KERNEL_BTF
+          CONFIG_KERNEL_ARM_PMU
+          CONFIG_KERNEL_BPF_EVENTS
+          CONFIG_KERNEL_PERF_EVENTS
+          CONFIG_KERNEL_XDP_SOCKETS
+          CONFIG_PACKAGE_daed
           CONFIG_PACKAGE_frpc
+          CONFIG_PACKAGE_btrfs-progs
+          CONFIG_PACKAGE_dosfstools
+          CONFIG_PACKAGE_e2fsprogs
+          CONFIG_PACKAGE_kmod-fs-btrfs
+          CONFIG_PACKAGE_kmod-fs-ext4
+          CONFIG_PACKAGE_kmod-fs-vfat
+          CONFIG_PACKAGE_kmod-nls-cp437
+          CONFIG_PACKAGE_kmod-nls-iso8859-1
+          CONFIG_PACKAGE_kmod-nls-utf8
+          CONFIG_PACKAGE_kmod-sched-bpf
+          CONFIG_PACKAGE_kmod-veth
+          CONFIG_PACKAGE_kmod-xdp-sockets-diag
           CONFIG_PACKAGE_luci-app-argon-config
+          CONFIG_PACKAGE_luci-app-daede
+          CONFIG_PACKAGE_luci-app-daede_daed
           CONFIG_PACKAGE_luci-app-frpc
           CONFIG_PACKAGE_luci-app-quickstart
           CONFIG_PACKAGE_luci-app-store
@@ -126,6 +160,7 @@ jobs:
           CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
           CONFIG_PACKAGE_quickstart
+          CONFIG_TARGET_ROOTFS_TARGZ
         )
         for config in "${required_configs[@]}"; do
           if ! grep -qx "${config}=y" .config; then
@@ -135,7 +170,10 @@ jobs:
         done
         grep -qx 'CONFIG_BPF_TOOLCHAIN_HOST_PATH="/usr"' .config
         excluded_packages=(
+          MAC80211_DEBUGFS
+          MAC80211_MESH
           adguardhome
+          brcmfmac-firmware-usb
           cgroupfs-mount
           clashoo
           containerd
@@ -144,6 +182,27 @@ jobs:
           docker-lan-bridge
           dockerd
           dockermanager
+          f2fs-tools
+          f2fsck
+          hostapd-common
+          iw
+          iwinfo
+          kmod-asn1-encoder
+          kmod-br-netfilter
+          kmod-brcmfmac
+          kmod-brcmutil
+          kmod-cfg80211
+          kmod-dax
+          kmod-dm
+          kmod-dummy
+          kmod-ipt-physdev
+          kmod-keys-encrypted
+          kmod-keys-trusted
+          kmod-mac80211
+          kmod-nf-ipvs
+          kmod-oid-registry
+          kmod-tpm
+          libseccomp
           luci-app-adguardhome
           luci-app-amlogic
           luci-app-clashoo
@@ -154,8 +213,24 @@ jobs:
           luci-i18n-ddns-go-zh-cn
           luci-lib-docker
           luci-theme-opentomcat
+          liblxc
+          lxc
+          lxc-auto
+          lxc-common
+          lxc-configs
+          lxc-hooks
+          lxc-init
+          lxc-templates
+          lxc-unprivileged
+          luci-app-lxc
           runc
           tini
+          wireless-regdb
+          wpa-cli
+          wpad-basic
+          wpad-basic-mbedtls
+          xfs-fsck
+          xfs-mkfs
         )
         for package in "${excluded_packages[@]}"; do
           if grep -qx "CONFIG_PACKAGE_${package}=y" .config; then
@@ -163,6 +238,31 @@ jobs:
             exit 1
           fi
         done
+        excluded_configs=(
+          CONFIG_BRCMFMAC_PCIE
+          CONFIG_BRCMFMAC_SDIO
+          CONFIG_BRCMFMAC_USB
+          CONFIG_DRIVER_11AC_SUPPORT
+          CONFIG_KERNEL_CFQ_GROUP_IOSCHED
+          CONFIG_KERNEL_CGROUP_DEVICE
+          CONFIG_KERNEL_CGROUP_FREEZER
+          CONFIG_KERNEL_CGROUP_HUGETLB
+          CONFIG_KERNEL_CGROUP_NET_PRIO
+          CONFIG_KERNEL_CGROUP_PERF
+          CONFIG_KERNEL_HUGETLBFS
+          CONFIG_KERNEL_HUGETLB_PAGE
+          CONFIG_KERNEL_MEMCG_SWAP_ENABLED
+          CONFIG_KERNEL_NET_CLS_CGROUP
+          CONFIG_KERNEL_TRANSPARENT_HUGEPAGE
+          CONFIG_KERNEL_TRANSPARENT_HUGEPAGE_ALWAYS
+        )
+        for config in "${excluded_configs[@]}"; do
+          if grep -qx "${config}=y" .config; then
+            echo "Excluded build option was selected: ${config}=y"
+            exit 1
+          fi
+        done
+        CCACHE_DIR="$PWD/.ccache" ccache --max-size=5G
         grep -E '^CONFIG_(TARGET_armsr|DEVEL|BPF_TOOLCHAIN|USE_LLVM|HAS_BPF_TOOLCHAIN)' .config
         make download -j8
         find dl -size -1024c -exec rm -f {} \;
@@ -173,6 +273,7 @@ jobs:
         cd openwrt
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 V=s
+        CCACHE_DIR="$PWD/.ccache" ccache --show-stats
         echo "======================="
         echo "Space usage:"
         echo "======================="
@@ -217,10 +318,14 @@ jobs:
       uses: ophub/flippy-openwrt-actions@main
       env:
         OPENWRT_ARMSR: openwrt/bin/targets/armsr/armv8/openwrt-armsr-armv8-generic-rootfs.tar.gz
-        PACKAGE_SOC: s905d
+        PACKAGE_SOC: diy
+        SCRIPT_DIY_PATH: packaging/mk_s905d_n1_nowifi.sh
+        OPENWRT_IP: ${{ env.DEFAULT_LAN_IP }}
         KERNEL_REPO_URL: ${{ env.KERNEL_REPO_URL }}
         KERNEL_VERSION_NAME: ${{ steps.resolve_kernel.outputs.kernel_version }}
         KERNEL_AUTO_LATEST: false
+        SAVE_OPENWRT_ROOTFS: false
+        ENABLE_WIFI_K510: 0
         WHOAMI: go-laoji
 
     - name: Organize files

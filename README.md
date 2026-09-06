@@ -12,6 +12,8 @@
     - [x] Subtarget —— 64-bit ARM machines
   - [x] 固件版本：`Go-Laoji N1 R26.09.04 / LuCI openwrt-25.12`（日期按构建日生成）
   - [x] 默认 LAN IP：`192.168.11.240`
+  - [x] 仅保留有线网络，关闭 Wi-Fi 驱动及工具
+  - [x] 移除 F2FS/XFS；保留 N1 打包器所需的 Btrfs 根分区与 FAT32 启动分区支持
   - [ ] `docker` / `dockerd`（不参与编译）
   - [ ] `luci-app-dockerman`（不参与编译）
   - [ ] `clashoo` / `luci-app-clashoo`（不参与编译）
@@ -55,6 +57,7 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260906 精简 N1 Wi-Fi、F2FS/XFS 及容器内核配置，启用构建缓存
 - 20260906 增加 QuickStart 并设为默认首页
 - 20260906 修复概览页固件版本日期重复显示
 - 20260906 移除 Clashoo 及 LuCI 配置页面
