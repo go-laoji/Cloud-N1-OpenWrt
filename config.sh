@@ -67,6 +67,7 @@ CONFIG_PACKAGE_btrfs-progs=y
 CONFIG_PACKAGE_bzip2=y
 # CONFIG_PACKAGE_cgroupfs-mount is not set
 CONFIG_PACKAGE_chattr=y
+# CONFIG_PACKAGE_clashoo is not set
 # CONFIG_PACKAGE_containerd is not set
 # CONFIG_PACKAGE_ddns-go is not set
 CONFIG_PACKAGE_dosfstools=y
@@ -180,10 +181,11 @@ CONFIG_PACKAGE_lsblk=y
 # CONFIG_PACKAGE_luci-app-amlogic is not set
 CONFIG_PACKAGE_luci-app-argon-config=y
 # CONFIG_PACKAGE_luci-app-arpbind is not set
+# CONFIG_PACKAGE_luci-app-clashoo is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-ddns-go is not set
 CONFIG_PACKAGE_luci-app-frpc=y
-CONFIG_PACKAGE_luci-app-redsocks=y
+CONFIG_PACKAGE_luci-app-quickstart=y
 CONFIG_PACKAGE_luci-app-store=y
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-ng is not set
 # CONFIG_PACKAGE_luci-app-rclone_INCLUDE_rclone-webui is not set
@@ -241,7 +243,7 @@ CONFIG_PACKAGE_perlbase-utf8=y
 CONFIG_PACKAGE_perlbase-xsloader=y
 CONFIG_PACKAGE_pigz=y
 CONFIG_PACKAGE_pv=y
-CONFIG_PACKAGE_redsocks=y
+CONFIG_PACKAGE_quickstart=y
 # CONFIG_PACKAGE_runc is not set
 CONFIG_PACKAGE_tar=y
 CONFIG_PACKAGE_terminfo=y
@@ -312,8 +314,10 @@ CONFIG_PACKAGE_kmod-xdp-sockets-diag=y
 # CONFIG_PACKAGE_luci-lib-docker is not set
 
 CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
+# CONFIG_PACKAGE_luci-i18n-clashoo-zh-cn is not set
 # CONFIG_PACKAGE_luci-i18n-ddns-go-zh-cn is not set
 CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
+CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
 EOF

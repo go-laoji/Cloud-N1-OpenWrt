@@ -119,12 +119,13 @@ jobs:
           CONFIG_PACKAGE_frpc
           CONFIG_PACKAGE_luci-app-argon-config
           CONFIG_PACKAGE_luci-app-frpc
-          CONFIG_PACKAGE_luci-app-redsocks
+          CONFIG_PACKAGE_luci-app-quickstart
           CONFIG_PACKAGE_luci-app-store
           CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn
           CONFIG_PACKAGE_luci-i18n-frpc-zh-cn
+          CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
-          CONFIG_PACKAGE_redsocks
+          CONFIG_PACKAGE_quickstart
         )
         for config in "${required_configs[@]}"; do
           if ! grep -qx "${config}=y" .config; then
@@ -136,6 +137,7 @@ jobs:
         excluded_packages=(
           adguardhome
           cgroupfs-mount
+          clashoo
           containerd
           ddns-go
           docker
@@ -144,9 +146,11 @@ jobs:
           dockermanager
           luci-app-adguardhome
           luci-app-amlogic
+          luci-app-clashoo
           luci-app-ddns-go
           luci-app-dockerman
           luci-app-dockermanager
+          luci-i18n-clashoo-zh-cn
           luci-i18n-ddns-go-zh-cn
           luci-lib-docker
           luci-theme-opentomcat

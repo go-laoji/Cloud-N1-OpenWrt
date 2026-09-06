@@ -40,17 +40,20 @@ sed -i \
   -e "s#^VERSION=.*#VERSION=\"${firmware_version}\"#" \
   -e "s#^PRETTY_NAME=.*#PRETTY_NAME=\"${firmware_dist} ${firmware_version}\"#" \
   -e "s#^BUILD_ID=.*#BUILD_ID=\"${firmware_version}\"#" \
-  -e "s#^OPENWRT_RELEASE=.*#OPENWRT_RELEASE=\"${firmware_dist} ${firmware_version}\"#" \
+  -e "s#^OPENWRT_RELEASE=.*#OPENWRT_RELEASE=\"${firmware_dist} \"#" \
   "$os_release" || exit 1
 sed -i \
   -e "s#DISTRIB_REVISION='[^']*'#DISTRIB_REVISION='${firmware_version}'#" \
   -e "s#DISTRIB_DESCRIPTION='[^']*'#DISTRIB_DESCRIPTION='${firmware_dist} '#" \
-  -e "s#OPENWRT_RELEASE=\"[^\"]*\"#OPENWRT_RELEASE=\"${firmware_dist} ${firmware_version}\"#" \
+  -e "s#OPENWRT_RELEASE=\"[^\"]*\"#OPENWRT_RELEASE=\"${firmware_dist} \"#" \
   "$default_settings" || exit 1
 grep -qxF "DISTRIB_REVISION='${firmware_version}'" "$openwrt_release" || exit 1
 grep -qxF "DISTRIB_DESCRIPTION='${firmware_dist} '" "$openwrt_release" || exit 1
+grep -qxF "BUILD_ID=\"${firmware_version}\"" "$os_release" || exit 1
+grep -qxF "OPENWRT_RELEASE=\"${firmware_dist} \"" "$os_release" || exit 1
 grep -qF "DISTRIB_REVISION='${firmware_version}'" "$default_settings" || exit 1
 grep -qF "DISTRIB_DESCRIPTION='${firmware_dist} '" "$default_settings" || exit 1
+grep -qF "OPENWRT_RELEASE=\"${firmware_dist} \"" "$default_settings" || exit 1
 echo "Using ${firmware_dist} ${firmware_version} as the firmware version"
 
 # Set the LAN address generated on the first boot.
@@ -117,6 +120,7 @@ rm -rf feeds/packages/net/{alist,adguardhome,dae,daed,mosdns,xray*,v2ray*,sing*,
 excluded_smpackage_packages=(
   feeds/smpackage/adguardhome
   feeds/smpackage/base-files
+  feeds/smpackage/clashoo
   feeds/smpackage/ddns-go
   feeds/smpackage/dnsmasq
   feeds/smpackage/firewall*
@@ -126,6 +130,7 @@ excluded_smpackage_packages=(
   feeds/smpackage/luci-app-adguardhome
   feeds/smpackage/luci-app-amlogic
   feeds/smpackage/luci-app-argon-config
+  feeds/smpackage/luci-app-clashoo
   feeds/smpackage/luci-app-ddns-go
   feeds/smpackage/luci-theme-argon
   feeds/smpackage/miniupnpd-iptables
@@ -155,12 +160,42 @@ done
 # luci-app-store and its task service are provided by smpackage.
 istore_packages=(
   feeds/smpackage/luci-app-store/Makefile
+  feeds/smpackage/luci-app-store/src/Makefile
+  feeds/smpackage/luci-app-store/src/po/zh-cn/iStore.po
   feeds/smpackage/luci-lib-taskd/Makefile
   feeds/smpackage/taskd/Makefile
 )
 for package_makefile in "${istore_packages[@]}"; do
   test -f "$package_makefile" || {
     echo "Unable to find iStore package: $package_makefile"
+    exit 1
+  }
+done
+
+# iStore bundles its translations in the main package. Its custom source
+# Makefile must iterate over the real po directory names (such as zh-cn), not
+# the BCP 47 names (such as zh_Hans) normalized by current LuCI.
+istore_src_makefile="feeds/smpackage/luci-app-store/src/Makefile"
+if grep -qF '$(foreach lang,$(LUCI_LANGUAGES),' "$istore_src_makefile"; then
+  sed -i 's/$(foreach lang,$(LUCI_LANGUAGES),/$(foreach lang,$(LUCI_LANGUAGES_RAW),/' "$istore_src_makefile" || exit 1
+elif ! grep -qF '$(foreach lang,$(LUCI_LANGUAGES_RAW),' "$istore_src_makefile"; then
+  echo "Unable to find the iStore translation install rule in $istore_src_makefile"
+  exit 1
+fi
+grep -qF '$(foreach lang,$(LUCI_LANGUAGES_RAW),' "$istore_src_makefile" || exit 1
+echo "Using the Chinese translation bundled with luci-app-store"
+
+# QuickStart provides the default LuCI home page and supports the N1 aarch64
+# target. Keep the package, LuCI application, and verified Chinese source
+# together so feed changes fail early instead of silently dropping the page.
+quickstart_packages=(
+  feeds/smpackage/quickstart/Makefile
+  feeds/smpackage/luci-app-quickstart/Makefile
+  feeds/smpackage/luci-app-quickstart/po/zh-cn/quickstart.po
+)
+for package_makefile in "${quickstart_packages[@]}"; do
+  test -f "$package_makefile" || {
+    echo "Unable to find QuickStart package: $package_makefile"
     exit 1
   }
 done
@@ -203,17 +238,6 @@ git -C package/community/openwrt-daede sparse-checkout set daed luci-app-daede v
 test -f package/community/openwrt-daede/daed/Makefile
 test -f package/community/openwrt-daede/luci-app-daede/Makefile
 
-# Redsocks is provided by the packages feed; add its LuCI editor separately.
-test -f feeds/packages/net/redsocks/Makefile || {
-  echo "Unable to find redsocks in the packages feed"
-  exit 1
-}
-git clone --depth=1 --filter=blob:none --sparse https://github.com/kenzok8/jell package/community/jell-redsocks
-git -C package/community/jell-redsocks sparse-checkout set luci-app-redsocks
-test -f package/community/jell-redsocks/luci-app-redsocks/Makefile || {
-  echo "Unable to find luci-app-redsocks in the jell source"
-  exit 1
-}
 ./scripts/feeds update -i packages luci smpackage
 for package in \
   luci-app-vsftpd \

@@ -14,11 +14,12 @@
   - [x] 默认 LAN IP：`192.168.11.240`
   - [ ] `docker` / `dockerd`（不参与编译）
   - [ ] `luci-app-dockerman`（不参与编译）
+  - [ ] `clashoo` / `luci-app-clashoo`（不参与编译）
   - [x] `luci-theme-argon`（默认主题）
   - [x] `luci-app-argon-config`
   - [ ] `ddns-go` / `luci-app-ddns-go`（不参与编译）
   - [x] `frpc` / `luci-app-frpc`
-  - [x] `redsocks` / `luci-app-redsocks`
+  - [x] `quickstart` / `luci-app-quickstart`（默认首页）
   - [x] `luci-app-store`
   - [ ] `luci-app-adguardhome`（不参与编译）
   - [ ] `luci-app-amlogic`（不参与编译）
@@ -54,12 +55,15 @@
   - [x] `luci-app-vsftpd`
 
 **更新日志**
+- 20260906 增加 QuickStart 并设为默认首页
+- 20260906 修复概览页固件版本日期重复显示
+- 20260906 移除 Clashoo 及 LuCI 配置页面
+- 20260906 修复 iStore 简体中文资源打包
 - 20260904 自定义概览页固件版本并按构建日期显示年月日
 - 20260904 增加 FRPC 客户端及 LuCI 配置页面
 - 20260904 默认 LAN IP 修改为 192.168.11.240
 - 20260904 增加 iStore 应用商店
 - 20260904 移除存在 LuCI 兼容问题的 DDNS-GO
-- 20260902 增加 Redsocks 及 LuCI 配置页面
 - 20260902 增加 DDNS-GO 及 LuCI 管理页面
 - 20260902 默认主题更换为 Argon，增加 Argon 配置，移除 Amlogic 和 AdGuard Home
 - 20260829 删除一些其它的软件，增加daed
