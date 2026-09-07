@@ -130,7 +130,7 @@ jobs:
           CONFIG_BPF_TOOLCHAIN_HOST
           CONFIG_USE_LLVM_HOST
           CONFIG_HAS_BPF_TOOLCHAIN
-          CONFIG_DAED_USE_KERNEL_BTF
+          CONFIG_DAED_USE_VMLINUX_BTF
           CONFIG_KERNEL_ARM_PMU
           CONFIG_KERNEL_BPF_EVENTS
           CONFIG_KERNEL_PERF_EVENTS
@@ -160,6 +160,7 @@ jobs:
           CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn
           CONFIG_PACKAGE_luci-theme-argon
           CONFIG_PACKAGE_quickstart
+          CONFIG_PACKAGE_vmlinux-btf
           CONFIG_TARGET_ROOTFS_TARGZ
         )
         for config in "${required_configs[@]}"; do

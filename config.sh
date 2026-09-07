@@ -290,9 +290,11 @@ CONFIG_PACKAGE_luci-app-daede_daed=y
 # CONFIG_PACKAGE_luci-app-daede_dae is not set
 CONFIG_PACKAGE_daed=y
 # CONFIG_PACKAGE_dae is not set
-CONFIG_DAED_USE_KERNEL_BTF=y
-# CONFIG_DAED_USE_VMLINUX_BTF is not set
-# CONFIG_PACKAGE_vmlinux-btf is not set
+# The current armsr configuration does not retain integrated kernel BTF after defconfig.
+# Use the detached BTF package, which is the proven working fallback for daed.
+# CONFIG_DAED_USE_KERNEL_BTF is not set
+CONFIG_DAED_USE_VMLINUX_BTF=y
+CONFIG_PACKAGE_vmlinux-btf=y
 
 # eBPF / BTF kernel options required by DAE
 CONFIG_KERNEL_BPF_EVENTS=y
