@@ -234,7 +234,8 @@ docker_packages=(
 rm -rf "${docker_packages[@]}"
 git clone https://github.com/kenzok8/golang -b 1.26 feeds/packages/lang/golang
 git clone --depth=1 --filter=blob:none --sparse https://github.com/kenzok8/openwrt-daede package/community/openwrt-daede
-git -C package/community/openwrt-daede sparse-checkout set daed luci-app-daede vmlinux-btf
+git -C package/community/openwrt-daede sparse-checkout set dae daed luci-app-daede vmlinux-btf
+test -f package/community/openwrt-daede/dae/files/dae.config
 test -f package/community/openwrt-daede/daed/Makefile
 test -f package/community/openwrt-daede/luci-app-daede/Makefile
 
