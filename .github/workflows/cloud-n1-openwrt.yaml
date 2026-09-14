@@ -95,10 +95,11 @@ jobs:
         path: |
           openwrt/.ccache
           openwrt/dl
-        key: n1-openwrt-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-${{ hashFiles('config.sh', 'script.sh') }}
+          !openwrt/dl/go-mod-cache
+        key: n1-openwrt-v2-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-${{ hashFiles('config.sh', 'script.sh') }}
         restore-keys: |
-          n1-openwrt-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-
-          n1-openwrt-${{ runner.os }}-armsr-
+          n1-openwrt-v2-${{ runner.os }}-armsr-${{ steps.source.outputs.revision }}-
+          n1-openwrt-v2-${{ runner.os }}-armsr-
 
     - name: Update feeds
       run: |
