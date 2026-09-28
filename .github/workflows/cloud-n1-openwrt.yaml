@@ -267,7 +267,8 @@ jobs:
         CCACHE_DIR="$PWD/.ccache" ccache --max-size=5G
         grep -E '^CONFIG_(TARGET_armsr|DEVEL|BPF_TOOLCHAIN|USE_LLVM|HAS_BPF_TOOLCHAIN)' .config
         make download -j8
-        find dl -size -1024c -exec rm -f {} \;
+        # Keep Go module sources intact; many valid module files are smaller than 1 KiB.
+        find dl -path 'dl/go-mod-cache' -prune -o -type f -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
       id: compile
