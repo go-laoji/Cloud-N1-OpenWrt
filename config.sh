@@ -337,3 +337,5 @@ CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-turboacc-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y
 EOF
+
+
